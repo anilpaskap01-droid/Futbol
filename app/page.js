@@ -1,15 +1,6 @@
-export const dynamic = "force-dynamic";
+import { scrapeMatches, scrapeNews } from "../lib/sky";
 
-async function getData(path) {
-  const host = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
-  try {
-    const res = await fetch(`${host}${path}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
+export const dynamic = "force-dynamic";
 
 function MatchStatus({ match }) {
   if (match.status === "LIVE") return <span className="status live">● {match.minute ? `${match.minute}'` : "CANLI"}</span>;
@@ -26,9 +17,13 @@ function Score({ match }) {
 }
 
 export default async function Home() {
-  const [matchData, newsData] = await Promise.all([getData("/api/matches"), getData("/api/news")]);
-  const matches = matchData?.matches || [];
-  const news = newsData?.articles || [];
+  const [matchesResult, newsResult] = await Promise.allSettled([
+    scrapeMatches(),
+    scrapeNews()
+  ]);
+
+  const matches = matchesResult.status === "fulfilled" ? matchesResult.value : [];
+  const news = newsResult.status === "fulfilled" ? newsResult.value : [];
 
   return (
     <>
