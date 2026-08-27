@@ -1,6 +1,6 @@
 {
   "name": "futbolcanli-no-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "engines": {
     "node": ">=20 <23"
@@ -11,7 +11,7 @@
     "start": "next start -H 0.0.0.0 -p $PORT"
   },
   "dependencies": {
-    "cheerio": "^1.0.0",
+    "cheerio": "1.0.0-rc.12",
     "next": "15.5.9",
     "react": "19.1.1",
     "react-dom": "19.1.1"
